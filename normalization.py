@@ -24,16 +24,17 @@ def normalize_dataset(dataset):
 print()
 file_path = input("Type input file name for normalization: ")
 print()
-ouput_path = input("Type name for output file: ")
+output_path = input("Type name for output file: ")
 # Prompt the user for the value of factor to normalization
 print()
 print(">> When you choose multiplication factor = 1, then values after normalization")
 print(">> will be in range of [0,1]; factor = 10, values =[0,10]; factor = 100, values = [0,100], etc.)")
-factor = int(input(" Enter the value of factor to normalization:  "))
+print()
+factor = int(input(" Enter the value of factor:  "))
 
 # Prompt the user for the number of decimals in rounding
 print()
-decimals = int(input("Enter the number of decimals for rounded values (0,XXXX) after normalization: "))
+decimals = int(input("Enter the number of decimals for rounded values (0,XXXX): "))
 
 # Read the input CSV file
 with open(file_path, 'r') as input_file:
@@ -44,9 +45,12 @@ with open(file_path, 'r') as input_file:
 normalized_data = [normalize_dataset(row) for row in data]
 
 # Write the processed data to the output file
-with open(ouput_path, 'w', newline='') as normalized_file:
+with open(output_path, 'w', newline='') as normalized_file:
     writer = csv.writer(normalized_file)
     writer.writerows(normalized_data)
 
 print()
 print("----> Normalization complete.")
+print()
+print(f"----> File {output_path} saved.")
+print()
