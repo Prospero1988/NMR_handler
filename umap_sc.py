@@ -62,7 +62,7 @@ n_neighbors = int(input("Enter value of n_neighbors, default (50): "))
 print()
 min_dist = float(input("Enter value of min_dist, default (0.5): "))
 
-reducer = umap.UMAP(n_components=target_dim)
+reducer = umap.UMAP(n_neighbors=n_neighbors, min_dist=min_dist, n_components=target_dim)
 
 # Fit and transform data using UMAP
 reduced_data = reducer.fit_transform(data)

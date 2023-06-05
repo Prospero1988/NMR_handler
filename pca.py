@@ -1,6 +1,7 @@
 import pandas as pd
 from sklearn.decomposition import PCA
 import numpy as np
+import os
 
 def reduce_csv_pca(filepath: str, n_components: int, output_filepath: str):
     # Load the data from the .csv file

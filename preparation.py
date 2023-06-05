@@ -181,6 +181,8 @@ transpose_csv()
 # Ask for the row number to be used for the plot
 print()
 row_number = int(input(">>> Drawing a graph for a row from the data after the transposition.\n>>> Specify the number of the row: "))
+row_number -= 1 
+row_number_visible = row_number + 1 
 
 # Read the input TEMP2.csv file
 temp_file2 = 'TEMP2.csv'
@@ -204,7 +206,8 @@ if 0 <= row_number < len(data):
     ax1.plot(x_values, selected_row)
     ax1.set_xlabel('Column')
     ax1.set_ylabel('Value')
-    ax1.set_title('Plot of RAW row ' + str(row_number), fontsize = 8)
+
+    ax1.set_title('Plot of RAW row ' + str(row_number_visible), fontsize = 8)
     plt.show()
 else:
     print()
@@ -243,7 +246,7 @@ else:
       
 # Prompt for confirmation to draw a plot of a random row after removing defined columns.
 print()
-print(f">>> Drawing a graph of the same row after column deleting (row number {row_number}).")
+print(f">>> Drawing a graph of the same row after column deleting (row number {row_number_visible}).")
 
 if num_ranges > 0:
     temp_file3 = 'TEMP3.csv'
@@ -264,7 +267,7 @@ x_values = range(1, len(selected_row) + 1)
 ax2.plot(x_values, selected_row)
 ax2.set_xlabel('Column')
 ax2.set_ylabel('Value')
-ax2.set_title('Plot of CLEANED row ' + str(row_number), fontsize = 8)
+ax2.set_title('Plot of CLEANED row ' + str(row_number_visible), fontsize = 8)
 plt.show()
 
 # Create the "done" subdirectory if it doesn't exist
@@ -328,7 +331,7 @@ while True:
         ax3.plot(x_values, selected_row)
         ax3.set_xlabel('Column')
         ax3.set_ylabel('Normalized Value')
-        ax3.set_title('Plot of NORMALIZED row ' + str(row_number), fontsize = 8)
+        ax3.set_title('Plot of NORMALIZED row ' + str(row_number_visible), fontsize = 8)
         plt.show()
         break
 

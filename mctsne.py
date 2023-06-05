@@ -23,7 +23,7 @@ print()
 decimals = int(input("Specify how many significant places to round off the values after performing MulticoreTSNE reduction: "))
 
 # perform dimensionality reduction using MulticoreTSNE
-reducer = TSNE(n_components, n_jobs=-1)
+reducer = TSNE(n_components=target_dim, n_jobs=-1)
 
 # Reducing data
 reduced_data = reducer.fit_transform(data)

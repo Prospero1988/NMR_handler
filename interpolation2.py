@@ -28,11 +28,12 @@ def plot_row(data, row_number, ax, plot_type):
         ax.plot(x_values, selected_row)
         ax.set_xlabel('Column')
         ax.set_ylabel('Value')
-        
+        row_number_visible = row_number + 1
+
         if plot_type == 'original':
-            ax.set_title('Plot of row ' + str(row_number))
+            ax.set_title('Plot of row ' + str(row_number_visible))
         elif plot_type == 'interpolated':
-            ax.set_title('Plot of row ' + str(row_number) + ' after interpolation')
+            ax.set_title('Plot of row ' + str(row_number_visible) + ' after interpolation')
     else:
         print("Invalid row number. No plot will be generated")
 
@@ -83,7 +84,8 @@ def main():
     kind = str(input("Choose method for interpolation: "))
     print()
 
-    row_number = int(input("Drawing a graph for a row from the data.\nSpecify the number of the row: "))
+    row_number = int(input("Drawing a graph for a row from the data.\n\nSpecify the number of the row: "))
+    row_number -= 1
     print()
 
     # Turn on interactive mode
@@ -113,6 +115,7 @@ def main():
     plt.show()
 
     input("Press Enter to finish the script: ")
+    print()
 
 if __name__ == '__main__':
     main()

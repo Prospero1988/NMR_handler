@@ -26,6 +26,17 @@ filepath = input("Enter path to the input .csv file: ")
 print()
 decimals = int(input("Enter target number of decimals for value rounding: "))
 print()
+print(">>> You have to specify additional parameters for UMAP reduction: ")
+print()
+need_help = input("Do you need addtional info about parameters n_neighbors and min_dist? (yes/no): ")
+print()
+if need_help == 'yes':
+    subprocess.call(['python', 'mctsne_halp.py'])
+
+n_neighbors_umpa = int(input("Enter value of n_neighbors, default (50): "))
+print()
+min_dist = float(input("Enter value of min_dist, default (0.5): "))
+
 # PCA
 def reduce_csv_pca(filepath: str, n_components: int, output_filepath: str):
     # Load the data from the .csv file
@@ -191,22 +202,10 @@ print()
 # UMAP
 
 # Initialize UMAP model with target dimensionality
-print()
-print(">>> You have to specify additional parameters for reduction: ")
-print()
-need_help = input("Do you need addtional info about parameters n_neighbors and min_dist? (yes/no): ")
-print()
-if need_help == 'yes':
-    subprocess.call(['python', 'mctsne_halp.py'])
-
-n_neighbors = int(input("Enter value of n_neighbors, default (50): "))
-print()
-min_dist = float(input("Enter value of min_dist, default (0.5): "))
-
 # Read in data from .csv file
 data = pd.read_csv(filepath, header=None)
 
-reducer = umap.UMAP(n_components)
+reducer = umap.UMAP(n_neighbors=n_neighbors_umpa, min_dist=min_dist, n_components=n_components)
 
 # Fit and transform data using UMAP
 reduced_data = reducer.fit_transform(data)
