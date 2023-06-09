@@ -6,6 +6,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 import shutil
+from scipy.interpolate import interp1d
 
 def remove_columns(data, ranges):
     cleaned_data = []
@@ -18,6 +19,23 @@ def remove_columns(data, ranges):
         cleaned_data.append(cleaned_row)
     return cleaned_data
 
+def interpolate_row(row, new_length, kind):
+    x = np.arange(len(row))
+    y = row
+    f = interp1d(x, y, kind=kind)
+
+    new_x = np.linspace(0, len(row) - 1, new_length)
+    return f(new_x)
+
+def interpolate_csv(file_path, output_file, new_length, kind):
+    df = pd.read_csv(file_path, header=None)
+    interpolated_data = []
+    for _, row in df.iterrows():
+        interpolated_row = interpolate_row(row.values, new_length, kind)
+        interpolated_data.append(interpolated_row)
+    interpolated_df = pd.DataFrame(interpolated_data)
+    interpolated_df.to_csv(output_file, index=False, header=False)
+
 def normalize_dataset(dataset):
     min_value = np.min(dataset)
     max_value = np.max(dataset)
@@ -28,33 +46,51 @@ def normalize_dataset(dataset):
 
 def print_help():
     print()
-    print(" >>>  This script performs various operations on NMR (Nuclear Magnetic Resonance) data sets stored in CSV files.")
-    print("      It provides the following functionality:")
+    print("Instructions:")
     print()
-    print("  1.  Script asks for a path to the directory that contains files with the extension *.csv,")
-    print("      in which the columns represent datasets. Then scripts selects only the second column")
-    print("      from each file and adds it to one temporary output file as a new, next column.")
+    print("     Script asks for a path to the directory that contains files with the extension *.csv,")
+    print("     in which the columns represent datasets. Then scripts selects only the second column")
+    print("     from each file and adds it to one temporary output file as a new, next column.")
     print()
-    print("  2.  The temporary file is then transposed - columns are converted to rows and saved ")
-    print("      as an second output temporary file. Script draws a plot of selected data row.")
+    print("     The temporary file is then transposed - columns are converted to rows and saved as")
+    print("     a second output temporary file. Script draws a plot of the selected data row.")
     print()
-    print("  3.  In the next step, the script deletes selected columns from data sets.")
-    print("      Script asks user to specify the number of column ranges to delete, and then")
-    print("      prompts to define those ranges. After removing columns from the dataset, the script")
-    print("      draws a second plot below the already active one. User can choose zero")
-    print("      ranges, which will skip the step of deleting columns from the dataset.")
+    print("     In the next step, the script deletes selected columns from data sets. The script asks")
+    print("     the user to specify the number of column ranges to delete and then prompts to define")
+    print("      those ranges. After removing columns from the dataset, the script draws a second plot")
+    print("     below the already active one. The user can choose zero ranges, which will skip the step")
+    print("     of deleting columns from the dataset.")
     print()
-    print("  4.  The script will ask user to normalize the data. Process could be skipped. ")
-    print("      Normalization will be carried out in any range from 0 to N. User specifies")
-    print("      N factor. Script draws a plot after this process.")
+    print("     The script will ask the user to normalize the data. The process could be skipped.")
+    print("     Normalization will be carried out in any range from 0 to N. The user specifies the N factor.")
+    print("     The script draws a plot after this process.")
     print()
-    print("  5.  Each step creates temporary file. At the end of the script, the user will be asked.")
-    print("      if he wants to delete temporary files")
+    print("     Each step creates a temporary file. At the end of the script, the user will be asked")
+    print("     if he wants to delete temporary files.")
     print()
-    print(" >>>  To use the script, provide the input directory path containing the CSV files. ")
-    print("      Follow the prompts to perform the desired operations and specify the necessary parameters.")
+    print("Commands:")
     print()
-    print(" >>>  Example usage: python preparation.py")
+    print("     --help: Displays this help page.")
+    print()
+    print("     Script Usage:")
+    print("     Run the script using the command: python preparation_total.py")
+    print()
+    print("     If you need additional information about the script, type 'help' when prompted.")
+    print("     This will display the script's description and author information.")
+    print()
+    print("     Follow the prompts to provide the necessary inputs and parameters for the script")
+    print("     to execute each step. The script will guide you through the process and display")
+    print("     relevant information and plots.")
+    print()
+    print("     At the end of the script, you will be asked if you want to delete the temporary files.")
+    print()
+    print("     Note: Make sure to have the required libraries installed before running the script")
+    print("     (matplotlib, numpy, pandas, and scipy).")
+    print()
+    print("Author:")
+    print()
+    print("     Arkadiusz Leniak | arek.kein@gmail.com")
+    print()
     print()
 
 if len(sys.argv) > 1 and sys.argv[1] == "--help":
@@ -103,21 +139,10 @@ while True:
             print(">>> Number of CSV files found in the directory:", num_csv_files)
             break
 
-# Ask for output .csv file name
-while True:
-    print()
-    norm_file = input("Enter the output file name: ")
-    end_file = norm_file
-    if os.path.isfile(norm_file):
-        overwrite = input("The output file already exists. Do you want to overwrite it? (yes/no): ")
-        if overwrite.lower() == "yes":
-            break
-        elif choice == 'no':
-            norm_file = input("Enter a new output CSV file name: ")
-        else:
-            print(">>> Invalid choice. Please enter 'yes' or 'no'.")
-    else:
-        break
+# Step 3: Ask for output .csv file name
+print()
+norm_file = input("Enter a new output CSV file name: ")
+end_file = norm_file
 
 # Get a list of all .csv files in the input directory
 csv_files = sorted([file for file in os.listdir(input_dir) if file.endswith('.csv')])
@@ -186,7 +211,7 @@ transpose_csv()
 
 # Ask for the row number to be used for the plot
 print()
-row_number = int(input(">>> Drawing a graph for a row from the data after the transposition.\n>>> Specify the number of the row: "))
+row_number = int(input(">>> Drawing a graph for a row from the data after the transposition.\n    Specify the number of the row: "))
 row_number -= 1 
 row_number_visible = row_number + 1 
 
@@ -200,7 +225,7 @@ with open(temp_file2, 'r') as input_file:
 plt.ion()
 
 # Create a figure with three subplots
-fig, (ax1, ax2, ax3) = plt.subplots(3, 1)
+fig, (ax1, ax2, ax3, ax4) = plt.subplots(4, 1)
 
 # Adjust the spacing between subplots
 plt.subplots_adjust(hspace=0.8)
@@ -248,7 +273,7 @@ if num_ranges > 0:
 else:
     print()
     print(f"----> No columns removed.")
-
+    # Write the cleaned data to the temporary3 output file
       
 # Prompt for confirmation to draw a plot of a random row after removing defined columns.
 print()
@@ -288,12 +313,86 @@ with open(temp_file3, 'r') as input_file:
     reader = csv.reader(input_file)
     data = [list(map(float, row)) for row in reader]
 
+# Ask for interpolation
+while True: 
+    print()
+    ask_for_normal = input("Do you want to interpolate datasets? (yes/no): ")
+    print()
+    if ask_for_normal.lower() == 'yes':
+
+    # Interpolate
+        with open(temp_file3, 'r') as file:
+                reader = csv.reader(file)
+                header = next(reader)
+                data = [list(map(float, row)) for row in reader]
+
+                num_columns = len(header)
+                print(">>> Number of columns in the loaded file: ", num_columns)
+                print()
+                num_rows = len(data)  # Count the rows in the loaded data list
+                print(">>> Number of rows in the loaded file:", num_rows)
+                print()
+
+                new_length = int(input("Enter the target number of columns after interpolation: "))
+
+        print()
+        print(">>> Possible interpolation methods: ")
+        print()
+        print("     'linear': Perform linear interpolation.")
+        print("     'nearest': Perform nearest-neighbor interpolation.")
+        print("     'zero': Perform zero-order hold interpolation.")
+        print("     'slinear': Perform linear spline interpolation.")
+        print("     'quadratic': Perform quadratic spline interpolation.")
+        print("     'cubic': Perform cubic spline interpolation.")
+        print()
+        kind = str(input("Choose method for interpolation: "))
+        print()
+    
+        file_path = temp_file3
+        temp_file4 = 'TEMP4.csv'
+        output_file = temp_file4
+
+        # Interpolate the CSV file
+        interpolate_csv(file_path, output_file, new_length, kind)
+    
+        #Read data for plot
+        with open(temp_file4, 'r') as input_file:
+            reader = csv.reader(input_file)
+            data = [list(map(float, row)) for row in reader]
+
+        # Turn on interactive mode
+        plt.ion()
+
+        # Plot the selected row of data
+
+        selected_row = data[row_number]
+        x_values = range(1, len(selected_row) + 1)
+        ax3.plot(x_values, selected_row)
+        ax3.set_xlabel('Column')
+        ax3.set_ylabel('Normalized Value')
+        ax3.set_title('Plot of Interpolated row ' + str(row_number_visible), fontsize = 8)
+        plt.show()
+        break
+                
+    elif ask_for_normal.lower() == 'no':
+        temp_file4 = 'TEMP4.csv'
+        shutil.copyfile(temp_file3, temp_file4)
+        break
+
+    else:
+        print()
+        print("Incorrect input. Type yes or no. ")
+
 # Ask for normalization
 
 while True: 
-    print()
     ask_for_normal = input("Do you want to normalize dataset? (yes/no): ")
     if ask_for_normal.lower() == 'yes':
+
+        # Read the input CSV file
+        with open(temp_file4, 'r') as input_file:
+             reader = csv.reader(input_file)
+             data = [list(map(float, row)) for row in reader]
 
         # Prompt the user for the number of decimals in rounding
         print()
@@ -301,14 +400,14 @@ while True:
 
         # Prompt the user for the value of factor to normalization
         print()
-        print(">> When you choose multiplication factor = 1, then values after normalization")
-        print(">> will be in range of [0,1]; factor = 10, values =[0,10]; factor = 100, values = [0,100], etc.)")
+        print(">>> When you choose multiplication factor = 1, then values after normalization")
+        print("    will be in range of [0,1]; factor = 10, values =[0,10]; factor = 100, values = [0,100], etc.)")
+        print()
         factor = int(input("Specify the value of the factor for normalization: "))
         print()
 
         # Normalize each dataset in the rows
         normalized_data = [normalize_dataset(row) for row in data]
-        print()
         print("----> Normalization completed.")
 
         # Write the processed data to the output file
@@ -334,15 +433,15 @@ while True:
 
         selected_row = data[row_number]
         x_values = range(1, len(selected_row) + 1)
-        ax3.plot(x_values, selected_row)
-        ax3.set_xlabel('Column')
-        ax3.set_ylabel('Normalized Value')
-        ax3.set_title('Plot of NORMALIZED row ' + str(row_number_visible), fontsize = 8)
+        ax4.plot(x_values, selected_row)
+        ax4.set_xlabel('Column')
+        ax4.set_ylabel('Normalized Value')
+        ax4.set_title('Plot of NORMALIZED row ' + str(row_number_visible), fontsize = 8)
         plt.show()
         break
 
     elif ask_for_normal.lower() == 'no':
-        shutil.copyfile(temp_file3, final_file_path)
+        shutil.copyfile(temp_file4, final_file_path)
         break
 
     else:
@@ -358,6 +457,7 @@ if removing_temps.lower() =='yes':
     temp_file1 = 'TEMP.csv'
     temp_file2 = 'TEMP2.csv'
     temp_file3 = 'TEMP3.csv'
+    temp_file4 = 'TEMP4.csv'
 
     if os.path.exists(temp_file1):
         os.remove(temp_file1)
@@ -367,6 +467,9 @@ if removing_temps.lower() =='yes':
 
     if os.path.exists(temp_file3):
         os.remove(temp_file3)
+
+    if os.path.exists(temp_file4):
+        os.remove(temp_file4)
 
     current_path = os.getcwd()
     print(">>> Script execution has been concluded with the erasing of all the TEMP files.")

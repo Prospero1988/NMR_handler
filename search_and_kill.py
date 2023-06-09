@@ -1,8 +1,16 @@
-#This script searches a specified folder and removes all files in it
-#hat have at least one of the keywords provided during script execution
-#in their filenames.
-
 import os
+import sys
+
+def print_help():
+    print()
+    print("This script searches the specified folder and removes all files in it")
+    print("that have at least one of the keywords specified during script execution")
+    print("in their filenames.")
+    print()
+
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print_help()
+    sys.exit(0)
 
 #Get the folder path
 folder_path = input("Enter the path to the folder you want to work with: ")

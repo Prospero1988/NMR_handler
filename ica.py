@@ -1,6 +1,8 @@
 import pandas as pd
 from sklearn.decomposition import FastICA
 import numpy as np
+import sys
+import os
 
 def reduce_csv_ica(filepath: str, n_components: int, output_filepath: str):
     # Load the data from the .csv file
@@ -29,6 +31,30 @@ def reduce_csv_ica(filepath: str, n_components: int, output_filepath: str):
     print(f">>> Mixing matrix (unmixing matrix):\n{mixing_matrix}")
     print()
 
+def print_help():
+    print()
+    print("Script Description:")
+    print("The script performs Independent Component Analysis (ICA) on a given CSV file, reducing the dimensionality of the data by extracting independent components.")
+    print()
+    print("Usage:")
+    print("python ica.py")
+    print()
+    print("Options:")
+    print("--help: Display help information about the script.")
+    print()
+    print("Instructions:")
+    print("1. Run the script without any command-line arguments.")
+    print("2. Follow the prompts to enter the necessary information:")
+    print("   - Enter the number of components (should be less than or equal to the number of features in the data).")
+    print("   - Enter the path to the input .csv file.")
+    print("   - Specify the number of significant decimal places to round off the values after performing ICA.")
+    print("3. The script will perform ICA on the input data, save the reduced data to a new CSV file, and display the mixing matrix (unmixing matrix) shape and values.")
+    print("4. Press Enter to finish the script.")
+    print()
+    
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print_help()
+    sys.exit(0)
 
 while True:
     try:

@@ -3,6 +3,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import numpy as np
 from scipy.interpolate import interp1d
+import sys
 
 def interpolate_row(row, new_length, kind):
     x = np.arange(len(row))
@@ -13,7 +14,7 @@ def interpolate_row(row, new_length, kind):
     return f(new_x)
 
 def interpolate_csv(input_file, output_file, new_length, kind):
-    df = pd.read_csv(input_file)
+    df = pd.read_csv(input_file, header=None)
     interpolated_data = []
     for _, row in df.iterrows():
         interpolated_row = interpolate_row(row.values, new_length, kind)
@@ -36,6 +37,41 @@ def plot_row(data, row_number, ax, plot_type):
             ax.set_title('Plot of row ' + str(row_number_visible) + ' after interpolation')
     else:
         print("Invalid row number. No plot will be generated")
+
+def print_help():
+    print()
+    print("Interpolation Script for NMR Data Sets in CSV Files")
+    print("by Arkadiusz Leniak (arek.kein@gmail.com)")
+    print()
+    print("This script performs interpolation on NMR (Nuclear Magnetic Resonance) data sets")
+    print("stored in CSV (Comma-Separated Values) files. It allows you to interpolate the data")
+    print("to a specified number of columns using different interpolation methods.")
+    print()
+    print("Usage:")
+    print("python interpolation2.py --help")
+    print()
+    print("Options:")
+    print("--help          : Show this help message and exit.")
+    print()
+    print("Before running the script, make sure you have the necessary dependencies installed:")
+    print("- pandas")
+    print("- matplotlib")
+    print("- numpy")
+    print("- scipy")
+    print()
+    print("To use the script, follow these steps:")
+    print("1. Run the script by executing 'python script.py'.")
+    print("2. Specify the input file name (CSV file containing the NMR data).")
+    print("3. Specify the output file name (CSV file to save the interpolated data).")
+    print("4. Enter the target number of columns after interpolation.")
+    print("5. Choose an interpolation method from the available options.")
+    print("6. Specify the row number to draw a graph for that particular row.")
+    print("7. The script will generate two plots: one for the original data and one for the interpolated data.")
+    print()
+    
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print_help()
+    sys.exit(0)
 
 # General message
 print()

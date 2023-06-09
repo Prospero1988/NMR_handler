@@ -3,6 +3,7 @@ import pandas as pd
 import numpy as np
 from scipy.interpolate import interp1d
 import os
+import sys
 
 def interpolate_row(row, new_length, kind):
     x = np.arange(len(row))
@@ -21,7 +22,23 @@ def interpolate_csv(file_path, output_file, new_length, kind):
     interpolated_df = pd.DataFrame(interpolated_data)
     interpolated_df.to_csv(output_file, index=False, header=False)
 
-
+def print_help():
+    print()
+    print("This script performs interpolation on NMR data sets stored in CSV files.")
+    print("It takes a directory path containing the CSV files and interpolates each file individually.")
+    print("The user is prompted to enter the target number of columns after interpolation and to choose an interpolation method.")
+    print("The interpolated files are saved with '_interpolated' appended to their names in the same directory.")
+    print()
+    print("Usage: python interpolation_dir.py [--help]")
+    print()
+    print("Options:")
+    print("  --help: Print this help message and exit.")
+    print()
+    
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print_help()
+    sys.exit(0)
+    
 # General message
 print()
 print()

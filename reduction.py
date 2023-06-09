@@ -1,9 +1,4 @@
 # Import libraries
-import os
-import csv
-import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 import subprocess
 
 while True:
@@ -23,7 +18,8 @@ while True:
     print(" >> 4. Random Projections")
     print(" >> 5. MultiCore t-SNE")
     print(" >> 6. UMAP")
-    print(" >> 7. All methods")
+    print(" >> 7. Bucket Integration")
+    print(" >> 8. All methods")
     print()
     print(" >> 0. Exit")
 
@@ -44,6 +40,8 @@ while True:
     elif choice == '6':
         subprocess.call(['python', 'umap_sc.py'])
     elif choice == '7':
+        subprocess.call(['python', 'bucket_integration.py'])
+    elif choice == '8':
         subprocess.call(['python', 'total_reduction.py'])
     elif choice == '0':
         print()

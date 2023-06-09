@@ -1,11 +1,42 @@
 import csv
 import numpy as np
+import os
+import sys
+
+def print_help():
+    print()
+    print("This script performs normalization on NMR data sets stored in CSV files.")
+    print("Usage: python normalization.py [--help]")
+    print()
+    print("Options:")
+    print("  --help     Display this help message and exit.")
+    print()
+    print("Description:")
+    print("  This script reads an input CSV file and performs normalization on the dataset.")
+    print("  It prompts the user to enter the file path of the input CSV file to be normalized.")
+    print("  The user is also asked to provide the file path for the output file.")
+    print("  Additionally, the user is prompted to enter a multiplication factor for normalization.")
+    print("  The script normalizes each dataset in the input CSV file.")
+    print("  It calculates the minimum and maximum values in the dataset, normalizes the values,")
+    print("  scales them by the factor provided, and rounds the values to the specified number of decimals.")
+    print("  The processed data is then written to the output CSV file.")
+    print()
+    print("Example:")
+    print("  python script_name.py")
+    print("  - This will run the script and prompt the user to enter the necessary inputs.")
+    print("  python normalization.py --help")
+    print("  - This will display this help message and exit the script.")
+    print()
+    
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print_help()
+    sys.exit(0)
 
 # General message
 print()
 print()
 print(" |--------------------------------------|")
-print(" |---------INTERPOLATION SCRIPT---------|")
+print(" |---------NORMALIZATION SCRIPT---------|")
 print(" |----for NMR data sets in CSV files----|")
 print(" |--------------------------------------|")
 print(" |-by Arkadiusz Leniak -----------------|")

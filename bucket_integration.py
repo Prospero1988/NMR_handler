@@ -1,5 +1,7 @@
 import csv
 import matplotlib.pyplot as plt
+import os
+import sys
 
 def plot_row(data, row_number, ax, plot_type):
     if 0 <= row_number < len(data):
@@ -45,12 +47,38 @@ def create_bucketed_data(data, n):
 
 
 def save_data_to_csv(data, filename):
-    new_filename = filename + "_bucketed.csv"
+    file_name, file_extension = os.path.splitext(filename)
+    new_filename = os.path.join(file_name + "_bucketed" + file_extension)
     with open(new_filename, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(data)
     return new_filename
 
+def print_help():
+    print()
+    print("Usage: python bucket_integration.py [input_file]")
+    print("Options:")
+    print("  --help          Display this help message")
+    print()
+    print("Description:")
+    print("This script performs bucket integration on NMR (Nuclear Magnetic Resonance) data sets stored in CSV files.")
+    print("It allows you to analyze and manipulate the data by dividing the columns into ranges and creating a new file with the integrated values.")
+    print()
+    print("Steps:")
+    print("1. Provide the name of the input CSV file when prompted.")
+    print("2. The script will load the data from the input file.")
+    print("3. You will be prompted to specify the row number to plot on a graph.")
+    print("4. The script will create a graph with two subplots: the original row and the bucket-integrated row.")
+    print("5. Enter the number of ranges to divide the columns into.")
+    print("6. The script will create a new file with the integrated values.")
+    print("7. The name of the new file will be displayed.")
+    print("8. The script will load the new file and plot the specified row on the second subplot.")
+    print("9. Press ENTER to finish and exit the script.")
+    print()
+
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print_help()
+    sys.exit(0)
 
 # General message
 print()
@@ -66,11 +94,10 @@ print()
 
 # Step 1: Provide the name of the batch file
 print()
-filename = input("Enter the name of the batch file (without the .csv extension): ")
-filepath = filename + ".csv"
+filename = input("Enter the name of the input file: ")
 
 # Step 2: Load data from the batch file
-data = load_data_from_csv(filepath)
+data = load_data_from_csv(filename)
 
 # Plotting the graph
 print()
@@ -89,6 +116,7 @@ plt.subplots_adjust(hspace=0.8)
 plot_row(data, row_number, ax1, 'original')
 
 # Step 3: Divide the number of columns into ranges and create bucketed data
+print()
 n = int(input("Enter the number of ranges: "))
 bucketed_data = create_bucketed_data(data, n)
 

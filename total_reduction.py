@@ -11,6 +11,46 @@ import umap
 import numpy as np
 import subprocess
 
+def print_help():
+    print()
+    print("Script Usage:")
+    print("-------------")
+    print("Run the script using the command: python total_reduction.py")
+    print()
+    print("If you need additional information about the script, type '--help' when prompted.")
+    print("This will display the script's description and author information.")
+    print()
+    print("Follow the prompts to provide the necessary inputs and parameters for the script to execute each step.")
+    print("The script will guide you through the process and display relevant information and outputs.")
+    print()
+    print("Note: Make sure to have the required libraries installed before running the script")
+    print("(pandas, numpy, scikit-learn, MulticoreTSNE, and umap).")
+    print()
+    print("Description:")
+    print("-------------")
+    print("This script performs dimensionality reduction on a given input CSV file.")
+    print("It supports several reduction methods, including PCA, ICA, NMF, Random Projection,")
+    print("MulticoreTSNE, and UMAP. The script allows you to specify the target dimensionality")
+    print("and the number of decimals for value rounding.")
+    print()
+    print("The script prompts you to provide the following inputs:")
+    print("- Target dimensionality: The desired dimensionality for the reduced data.")
+    print("- Path to the input CSV file: The file containing the input data to be reduced.")
+    print("- Target number of decimals: The number of decimals to round the values in the reduced data.")
+    print()
+    print("If you choose UMAP reduction, the script will prompt you for additional parameters:")
+    print("- n_neighbors: The number of neighbors to consider during UMAP reduction. (default: 50)")
+    print("- min_dist: The minimum distance between points in the UMAP embedding. (default: 0.5)")
+    print()
+    print("During the execution, the script will display progress messages and save the reduced")
+    print("data as separate CSV files. At the end, you will be prompted to press Enter to finish")
+    print("the script.")
+    print()
+
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print_help()
+    sys.exit(0)
+
 while True:
     try:
         n_components = int(input("Enter target dimensionality: "))

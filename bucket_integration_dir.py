@@ -1,5 +1,34 @@
 import csv
 import os
+import sys
+
+def print_help():
+    print()
+    print("This script performs bucket integration on NMR (Nuclear Magnetic Resonance) data sets stored in CSV files. It divides the data into a specified number of ranges and calculates the sum of values within each range. The processed data is then saved to new CSV files.")
+    print()
+    print("The script provides a command-line interface that allows you to specify the directory containing the CSV files and the number of ranges for bucket integration. It processes all the CSV files in the specified directory.")
+    print()
+    print("Here's how the script works:")
+    print()
+    print("1. You are prompted to enter the name of the directory containing the CSV files.")
+    print("2. You are prompted to enter the number of ranges for bucket integration.")
+    print("3. The script loads and processes each CSV file in the directory.")
+    print("4. For each file, it divides the number of columns into ranges and calculates the sum of values within each range.")
+    print("5. The processed data is saved to a new CSV file with the original file name appended with '_bucketed'.")
+    print("6. The script displays the name of the created file.")
+    print("7. Once all files in the directory have been processed, the script displays a completion message.")
+    print()
+    print("Usage: python bucket_integration_dir.py [OPTIONS]")
+    print()
+    print("Options:")
+    print("  --help\t\tDisplay this help message and exit.")
+    print("  --dir DIRECTORY\tSpecify the directory containing the CSV files.")
+    print("  --ranges N\t\tSpecify the number of ranges for bucket integration.")
+    print()
+
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print_help()
+    sys.exit(0)
 
 def load_data_from_csv(filepath):
     with open(filepath, 'r') as file:
@@ -29,7 +58,9 @@ def create_bucketed_data(data, n):
 
 
 def save_data_to_csv(data, filename):
-    new_filename = filename + "_bucketed.csv"
+    
+    file_name, file_extension = os.path.splitext(filename)
+    new_filename = os.path.join(file_name + "_bucketed" + file_extension)
     with open(new_filename, 'w', newline='') as file:
         writer = csv.writer(file)
         writer.writerows(data)
@@ -49,6 +80,9 @@ print()
 
 # Step 1: Provide the name of the directory
 directory = input("Enter the name of the directory containing the CSV files: ")
+print()
+n = int(input("Enter the number of ranges: "))
+print()
 
 # Step 2: Load and process data from CSV files in the directory
 for filename in os.listdir(directory):
@@ -57,8 +91,7 @@ for filename in os.listdir(directory):
         print("Processing file:", filename)
         data = load_data_from_csv(filepath)
 
-        # Step 3: Divide the number of columns into ranges and create bucketed data
-        n = int(input("Enter the number of ranges: "))
+        # Divide the number of columns into ranges and create bucketed data
         bucketed_data = create_bucketed_data(data, n)
 
         # Step 4: Create a new file with range values

@@ -21,7 +21,7 @@ while True:
     print()
     print(" >> 1. Check and automatically install the required modules using the pip function.")
     print()
-    print(" >> 2. Merge multiple CSV files, transpose and normalize data.")
+    print(" >> 2. Merge multiple CSV files, transpose, interpolate and normalize data.")
     print()
     print(" >> 3. Add Column Headers and copy columns from another CSV File.")
     print()
@@ -40,7 +40,7 @@ while True:
     if choice == '1':
         subprocess.call(['python', 'modules.py'])
     elif choice == '2':
-        subprocess.call(['python', 'preparation.py'])
+        subprocess.call(['python', 'preparation_total.py'])
     elif choice == '3':
         subprocess.call(['python', 'header_and_column_insert.py'])
     elif choice == '4':

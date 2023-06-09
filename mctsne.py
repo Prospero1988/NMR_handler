@@ -2,6 +2,39 @@ import pandas as pd
 from MulticoreTSNE import MulticoreTSNE as TSNE
 import numpy as np
 import os
+import sys
+
+def print_help():
+    print()
+    print("MulticoreTSNE Dimensionality Reduction Script")
+    print()
+    print("This script performs dimensionality reduction on a given dataset using the MulticoreTSNE library.")
+    print("It reduces the dimensionality of the input data to a specified target dimension.")
+    print()
+    print("Usage:")
+    print("python mctsne.py --help")
+    print()
+    print("Options:")
+    print("--help          : Show this help message and exit.")
+    print()
+    print("Before running the script, make sure you have the necessary dependencies installed:")
+    print("- pandas")
+    print("- MulticoreTSNE")
+    print()
+    print("To use the script, follow these steps:")
+    print("1. Install the MulticoreTSNE library by following the instructions provided by the author:")
+    print("   https://github.com/DmitryUlyanov/Multicore-TSNE/")
+    print("2. Run the script by executing 'python script.py'.")
+    print("3. Enter the name of the .csv file containing the input data.")
+    print("4. Specify the target dimensionality for the dimensionality reduction.")
+    print("5. Specify the number of significant places to round off the values after performing MulticoreTSNE reduction.")
+    print("6. The script will perform the dimensionality reduction using MulticoreTSNE.")
+    print("7. The reduced data will be saved in a new .csv file with '_MCTSNE' suffix in the same directory as the input file.")
+    print()
+    
+if len(sys.argv) > 1 and sys.argv[1] == "--help":
+    print_help()
+    sys.exit(0)
 
 print()
 print("Check how to install MulticoreTSNE library at github site of the author:")
