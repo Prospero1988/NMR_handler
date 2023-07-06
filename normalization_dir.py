@@ -18,6 +18,7 @@ def print_help():
     print("  Additionally, the user is prompted to enter the number of decimals for rounding the normalized values.")
     print("  The script normalizes each dataset in the CSV files and saves the processed data in new CSV files.")
     print("  The output files are named with '_normalized' appended to the original file names.")
+    print("  Input files will be delted after normalization")
     print()
     print("Example:")
     print("  python script_name.py")
@@ -88,6 +89,12 @@ for root, dirs, files in os.walk(directory_path):
                 writer.writerows(normalized_data)
 
             print(f"----> File {output_file_path} saved.")
+
+            # Remove the input file
+            os.remove(file_path)
+            print(f"----> Input file {file_path} removed.")
+            print()
+
 
 print()
 print("----> Normalization complete.")

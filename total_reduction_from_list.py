@@ -3,10 +3,11 @@ import pandas as pd
 import numpy as np
 from sklearn.decomposition import PCA, FastICA, NMF
 from sklearn.random_projection import GaussianRandomProjection
-from MulticoreTSNE import MulticoreTSNE
+#from MulticoreTSNE import MulticoreTSNE
 import umap
 import sys
 import subprocess
+import time
 
 def print_help():
     print()
@@ -54,6 +55,9 @@ if len(sys.argv) > 1 and sys.argv[1] == "--help":
     print_help()
     sys.exit(0)
 
+# Start measuring the execution time
+start_time = time.time()
+
 def reduce_csv_pca(filepath, n_components, output_filepath):
     data = pd.read_csv(filepath, header=None)
     rounded_data = data.round(decimals)
@@ -73,7 +77,7 @@ def reduce_csv_ica(filepath, n_components, output_filepath):
     rounded_data = data.round(decimals)
 
     # Create the ICA model with n_components
-    ica = FastICA(n_components, whiten='arbitrary-variance', max_iter=10000)  # Set whiten to True
+    ica = FastICA(n_components, whiten='arbitrary-variance', max_iter=10000, tol=0.001)  # Set whiten to True
     reduced_data = ica.fit_transform(rounded_data)
 
     # Save reduced data to .csv file
@@ -89,10 +93,15 @@ def reduce_csv_nmf(filepath, n_components, output_filepath):
 
     # Przekształć wartości ujemne na 0 i zastosuj logarytmowanie
 
-    rounded_data[rounded_data < 0] = 0
-    rounded_data = np.log1p(rounded_data + 1e-7)
+    #Dane nieznormalizowane
+    #rounded_data[rounded_data < 0] = 0
+    #rounded_data = np.log1p(rounded_data + 1e-7)
 
-    nmf = NMF(n_components=n_components, max_iter=2000, l1_ratio=0.1, solver='mu', beta_loss='itakura-saito')
+    #nmf = NMF(n_components=n_components, max_iter=2000, l1_ratio=0.1, solver='mu', beta_loss='itakura-saito')
+
+    #dane znormalizowane
+    nmf = NMF(n_components=n_components, max_iter=2000)
+
     reduced_data = nmf.fit_transform(rounded_data)
 
     # Save reduced data to .csv file
@@ -117,19 +126,19 @@ def reduce_csv_random_projection(filepath, n_components, output_filepath):
     print(f">>> Random Projections reduction completed. Data saved as: {output_filepath}")
     print()
 
-def reduce_csv_mctsne(filepath, n_components, output_filepath):
-    data = pd.read_csv(filepath, header=None)
-    rounded_data = data.round(decimals)
+#def reduce_csv_mctsne(filepath, n_components, output_filepath):
+    #data = pd.read_csv(filepath, header=None)
+    #rounded_data = data.round(decimals)
 
-    mctsne = MulticoreTSNE(n_components=n_components, n_jobs=-1)
-    reduced_data = mctsne.fit_transform(rounded_data)
+    #mctsne = MulticoreTSNE(n_components=n_components, n_jobs=-1)
+    #reduced_data = mctsne.fit_transform(rounded_data)
 
     # Save reduced data to .csv file
-    pd.DataFrame(reduced_data).to_csv(output_filepath, header=None, index=None)
+    #pd.DataFrame(reduced_data).to_csv(output_filepath, header=None, index=None)
 
-    print()
-    print(f">>> MulticoreTSNE reduction completed. Data saved as: {output_filepath}")
-    print()
+    #print()
+    #print(f">>> MulticoreTSNE reduction completed. Data saved as: {output_filepath}")
+    #print()
 
 def reduce_csv_umap(filepath, n_components, output_filepath):
     data = pd.read_csv(filepath, header=None)
@@ -163,8 +172,8 @@ def process_file_list(filepath_list, n_components, decimals):
                 reduce_csv_nmf(filepath, n_components, output_filepath)
             elif reduction_method == "RandomProjection":
                 reduce_csv_random_projection(filepath, n_components, output_filepath)
-            elif reduction_method == "MulticoreTSNE":
-                reduce_csv_mctsne(filepath, n_components, output_filepath)
+            #elif reduction_method == "MulticoreTSNE":
+                #reduce_csv_mctsne(filepath, n_components, output_filepath)
             elif reduction_method == "UMAP":
                 reduce_csv_umap(filepath, n_components, output_filepath)
 
@@ -188,3 +197,13 @@ filepath_list = pd.read_csv(filepath_list, header=None)
 filepath_list = filepath_list[0].tolist()
 
 process_file_list(filepath_list, n_components, decimals)
+
+# Stop measuring the execution time
+end_time = time.time()
+
+# Calculate the total execution time
+execution_time = end_time - start_time
+
+print()
+print("Total execution time: {:.2f} seconds".format(execution_time))
+print()
